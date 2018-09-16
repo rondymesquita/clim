@@ -1,0 +1,24 @@
+{
+  "name": "clim",
+  "version": "0.0.1",
+  "description": "Menus on cli",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "keywords": [
+    "menu",
+    "cli"
+  ],
+  "author": "rondinellimesquitas@gmail.com",
+  "license": "MIT",
+  "dependencies": {
+    "shelljs": "^0.8.2",
+    "terminal-kit": "^1.26.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.5.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.14.0"
+  }
+}
