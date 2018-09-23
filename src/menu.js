@@ -12,9 +12,10 @@ class Menu {
     };
   }
 
-  init() {
-    const selectedItem = this.build();
+  async init() {
+    const selectedItem = await this.mount();
     const { selectedIndex } = selectedItem;
+    this.triggerAction(selectedItem);
   }
 
   async mount() {
@@ -25,8 +26,8 @@ class Menu {
   triggerAction(selectedItem) {
     const { selectedIndex } = selectedItem;
     const item = this.menu.items[selectedIndex];
-    if (item.cmds){
-      for (const cmd of cmds) {
+    if (item.cmds.length > 0){
+      for (const cmd of item.cmds) {
         shell.exec(cmd);
       }
     } else {

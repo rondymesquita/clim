@@ -35,7 +35,10 @@ async function main() {
     const cli = new Cli();
     while (true) {
       const menu = new Menu(cli, menuFile);
-      menu.init()
+      await menu.init()
+      // const selectedItem = await menu.mount()
+      // menu.triggerAction(selectedItem)
+
 
       // if (selectedItem.isMenu()) {
       // }
