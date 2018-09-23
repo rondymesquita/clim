@@ -27,6 +27,9 @@ module.exports = {
             "error",
             "always"
         ],
+        'no-underscore-dangle': [
+            'off'
+        ],
         'no-restricted-syntax': [
               'off',
               'ForInStatement',
