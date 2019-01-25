@@ -1,6 +1,6 @@
 const Menu = require('./menu');
 module.exports = class MenuBuilder {
-  constructor(menuFile) {
+  constructor(items) {
     let m;
     this._parse(menuFile)
 
