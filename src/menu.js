@@ -1,38 +1,31 @@
-const shell = require('shelljs');
+const ShellModule = require('./modules/shell.module.js');
 
-class Menu {
-  constructor(cli, menu) {
-    this.term = cli.term;
-    this.menu = menu;
-
-    this.options = {
-      leftPadding: '  ',
-      selectedLeftPadding: '> ',
-      submittedLeftPadding: '* ',
-    };
+module.exports = class Menu {
+  constructor(items) {
+    this.items = [];
   }
 
-  async init() {
-    const selectedItem = await this.mount();
-    const { selectedIndex } = selectedItem;
-    this.triggerAction(selectedItem);
+  hasChild() {
+    return this.items.items.length > 0;
   }
 
-  async mount() {
-    const itemsToMount = this.menu.items.map((item, index) => `${index + 1}. ${item.name}`);
-    return this.term.singleColumnMenu(itemsToMount, this.options).promise;
+  isSubmenu() {
+    throw new Error('not yet implemented');
   }
 
-  triggerAction(selectedItem) {
-    const { selectedIndex } = selectedItem;
-    const item = this.menu.items[selectedIndex];
-    if (item.cmds.length > 0){
-      for (const cmd of item.cmds) {
-        shell.exec(cmd);
-      }
+  // getByIndex(index) {
+  //   return this.items[index];
+  // }
+
+  open() {
+    console.log('opening', this);
+    if (this.module === 'shell') {
+      console.log('shell module');
+      const shellModule = new ShellModule();
+      shellModule.exec(this);
     } else {
-      console.log('this is a submenu')
+      console.log('this is a submenu');
     }
   }
-}
-module.exports = Menu;
+  
+};

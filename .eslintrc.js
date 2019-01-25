@@ -31,11 +31,14 @@ module.exports = {
             'off'
         ],
         'no-restricted-syntax': [
-              'off',
-              'ForInStatement',
-              'ForOfStatement',
-              'LabeledStatement',
-              'WithStatement',
+            'off',
+            'ForInStatement',
+            'ForOfStatement',
+            'LabeledStatement',
+            'WithStatement',
         ],
+        "class-methods-use-this": [
+            'off'
+        ]
     }
 };

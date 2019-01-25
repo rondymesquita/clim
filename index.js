@@ -1,31 +1,36 @@
 const Cli = require('./src/cli');
-const Menu = require('./src/menu');
+const MenuCli = require('./src/menu-cli');
+// const MenuBuilder = require('./src/menu-builder.js');
 
 const menuFile = {
   items: [
     {
       name: 'Apt update',
+      module: 'shell',
       cmds: [
         'echo "Hello!"',
       ],
     },
     {
       name: 'Apt update',
+      module: 'shell',
       cmds: [
         'echo "Hello!"',
-        'dir',
-        'dir',
-        'dir',
+        'echo "Hello!"',
+        'echo "Hello!"',
       ],
     },
     {
       name: 'Sub menu',
-      items: {
-        name: 'Apt update',
-        cmds: [
-          'echo "Hello!"',
-        ],
-      },
+      items: [
+        {
+          name: 'Apt update',
+          module: 'shell',
+          cmds: [
+            'echo "Hello!"',
+          ],
+        },
+      ],
     },
   ],
 };
@@ -33,21 +38,19 @@ const menuFile = {
 async function main() {
   try {
     const cli = new Cli();
-    while (true) {
-      const menu = new Menu(cli, menuFile);
-      await menu.init()
-      // const selectedItem = await menu.mount()
-      // menu.triggerAction(selectedItem)
+    const menuCli = new MenuCli(cli, menuFile);
+    const menu = await menuCli.show();
+    menu.open();
 
-
-      // if (selectedItem.isMenu()) {
-      // }
-
-      // const menu = new Menu(cli, menuFile);
-      // const selectedItem = await menu.show();
-      // console.log(selectedItem);
-      // menu.triggerAction(selectedItem);
-    }
+    // while (true) {
+    //   selectedItem = await menu.mount();
+    //   menu.open(selectedItem);
+    //   // if(new Menu(cli, selectedItem)) {
+    //   //   menu = selectedItem
+    //   // } else {
+    //   //   menu.open(selectedItem);
+    //   // }
+    // }
   } catch (err) {
     console.err(err);
   } finally {
@@ -55,4 +58,8 @@ async function main() {
   }
 }
 
-main();
+try {
+  main();
+} catch (err) {
+  console.err(err)
+}
