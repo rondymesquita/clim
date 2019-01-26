@@ -1,12 +1,14 @@
 const ShellModule = require('./modules/shell.module.js');
-const Menu = require('./menu');
+// const Menu = require('./menu');
 const MenuBuilder = require('./menu-builder');
 
 module.exports = class MenuCli {
   constructor(cli, menuFile) {
     this.term = cli.term;
+    // console.log('>', menuFile);
     this.menu = new MenuBuilder(menuFile);
-    console.log(this.menu, this.menu instanceof Menu);
+    console.log('>', this.menu);
+    // console.log(this.menu, this.menu instanceof Menu);
 
     this.options = {
       leftPadding: '  ',
@@ -16,14 +18,13 @@ module.exports = class MenuCli {
   }
 
   async show() {
-    const itemsToMount = this.menu.items.map((item, index) => `${index + 1}. ${item.name}`);
-    // console.log('menu', this.menu.items);
-    // console.log('menu', itemsToMount);
+    const itemsToMount = this.menu.children.map((item, index) => `${index + 1}. ${item.name}`);
+    console.log('menu', itemsToMount);
     const item = await this.term.singleColumnMenu(itemsToMount, this.options).promise;
     const { selectedIndex } = item;
-    // const selectedItem = this.menu.items[selectedIndex];
-    const selectedMenu = this.menu.getByIndex(selectedIndex);
-    console.log('menu', selectedMenu, selectedMenu instanceof Menu);
+    console.log('menu', selectedIndex);
+    const selectedMenu = this.menu.getChild(selectedIndex);
+    console.log('menu', selectedMenu);
     return selectedMenu;
   }
 
