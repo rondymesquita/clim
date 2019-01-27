@@ -1,12 +1,12 @@
 const Cli = require('./src/cli');
 const MenuCli = require('./src/menu-cli');
-// const MenuBuilder = require('./src/menu-builder.js');
+const MenuBuilder = require('./src/menu-builder.js');
 
-const rootMenu = {
+const fileText = {
   "name": "root",
   "items": [
     {
-      "name": "MENU1",
+      "name": "Say Hello",
       "module": {
         "name": "shell",
         "cmds": [
@@ -15,7 +15,7 @@ const rootMenu = {
       }
     },
     {
-      "name": "MENU2 COM SUBMENU",
+      "name": "Submenu",
       "items": [
         {
           "name": "Apt update",
@@ -34,9 +34,11 @@ const rootMenu = {
 async function main() {
   try {
     const cli = new Cli();
-    const menuCli = new MenuCli(cli, rootMenu);
-    const menu = await menuCli.show();
-    menu.open();
+    const rootMenu = new MenuBuilder(fileText);
+    const menuCli = new MenuCli(cli);
+    await menuCli.show(rootMenu);
+    // await menuCli.init;
+    // menuCli.open(menu);
 
     // while (true) {
     //   selectedItem = await menu.mount();
@@ -54,12 +56,4 @@ async function main() {
   }
 }
 
-process.on('uncaughtException', function (err) {
-  console.log(err);
-})
-
-try {
-  main();
-} catch (err) {
-  console.err(err)
-}
+main();

@@ -1,14 +1,10 @@
 const ShellModule = require('./modules/shell.module.js');
 // const Menu = require('./menu');
-const MenuBuilder = require('./menu-builder');
 
 module.exports = class MenuCli {
-  constructor(cli, menuFile) {
+  constructor(cli) {
     this.term = cli.term;
-    // console.log('>', menuFile);
-    this.menu = new MenuBuilder(menuFile);
-    console.log('>', this.menu);
-    // console.log(this.menu, this.menu instanceof Menu);
+    this.cli = cli;
 
     this.options = {
       leftPadding: '  ',
@@ -17,24 +13,41 @@ module.exports = class MenuCli {
     };
   }
 
-  async show() {
-    const itemsToMount = this.menu.children.map((item, index) => `${index + 1}. ${item.name}`);
-    console.log('menu', itemsToMount);
+  // async init() {
+  //   const selectedMenu = await this.show();
+  //   console.log('test', selectedMenu.hasChildren());
+
+  //   if (selectedMenu.hasChildren()){
+  //     await this.show(selectedMenu);
+  //   }
+  //   this.open(selectedMenu);
+  // }
+
+  async show(menu) {
+    this.cli.reset();
+    const itemsToMount = menu.children.map((item, index) => `${index + 1}. ${item.name}`);
+    itemsToMount.push('0. Back/Exit');
     const item = await this.term.singleColumnMenu(itemsToMount, this.options).promise;
-    const { selectedIndex } = item;
-    console.log('menu', selectedIndex);
-    const selectedMenu = this.menu.getChild(selectedIndex);
-    console.log('menu', selectedMenu);
-    return selectedMenu;
+    const { selectedIndex, selectedText } = item;
+    if (selectedText === '0. Back/Exit') {
+      await this.show(menu.getParent());
+    } else {
+      const selectedMenu = menu.getChild(selectedIndex);
+
+      if (selectedMenu.hasChildren()) {
+        await this.show(selectedMenu);
+      } else {
+        this.open(selectedMenu);
+      }
+    }
   }
 
-  open(item) {
-    if (item.module === 'shell') {
-      console.log('shell module');
+  open(menu) {
+    if (menu.module.name === 'shell') {
       const shellModule = new ShellModule();
-      shellModule.exec(item);
+      shellModule.exec(menu.module);
     } else {
-      console.log('this is a submenu');
+      console.log('this is a submenu', menu);
     }
   }
 }

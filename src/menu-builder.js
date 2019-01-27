@@ -1,4 +1,4 @@
-const Node = require('./node');
+const Menu = require('./menu');
 
 module.exports = class MenuBuilder {
   constructor(n) {
@@ -8,12 +8,12 @@ module.exports = class MenuBuilder {
   }
 
   parse(n) {
-    const node = new Node({ name: n.name, module: n.module });
+    const menu = new Menu({ name: n.name, module: n.module });
     if (n.items && n.items.length > 0) {
       for (const child of n.items) {
-        node.addChild(this.parse(child));
+        menu.addChild(this.parse(child));
       }
     }
-    return node;
+    return menu;
   }
 };

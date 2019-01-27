@@ -3,10 +3,14 @@ const terminalKit = require('terminal-kit');
 module.exports = class Cli {
   constructor() {
     this.term = terminalKit.terminal;
+    this.addHeader();
+    this._handleTerminate();
+  }
+
+  addHeader() {
     this.term.eraseDisplay();
     this.term.cyan('Cli Menu Alpha\n');
     this.term.yellow('Select an option and press Enter\n');
-    this._handleTerminate();
   }
 
   _handleTerminate() {
@@ -18,5 +22,10 @@ module.exports = class Cli {
   terminate() {
     this.term.grabInput(false);
     setTimeout(() => { process.exit(); }, 100);
+  }
+
+  reset() {
+    this.term.clear();
+    this.addHeader();
   }
 };
