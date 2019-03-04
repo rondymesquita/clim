@@ -13,19 +13,24 @@ module.exports = class Cli {
     this.term.yellow('Select an option and press Enter\n');
   }
 
+  terminate() {
+    this.term.grabInput(false);
+    setTimeout(() => { process.exit(); }, 100);
+  }
+
+  clear() {
+    this.term.clear();
+  }
+
+  reset() {
+    this.clear();
+    this.addHeader();
+  }
+
   _handleTerminate() {
     this.term.on('key', (name) => {
       if (name === 'CTRL_C') { this.terminate(); }
     });
   }
 
-  terminate() {
-    this.term.grabInput(false);
-    setTimeout(() => { process.exit(); }, 100);
-  }
-
-  reset() {
-    this.term.clear();
-    this.addHeader();
-  }
 };

@@ -1,9 +1,9 @@
 // const ShellModule = require('./modules/shell.module.js');
 
 module.exports = class Menu {
-  constructor({ name, module = {} }) {
+  constructor({ name, cmds }) {
     this.name = name;
-    this.module = module;
+    this.cmds = cmds;
     this.children = [
     ];
     this.parent = null;
@@ -13,8 +13,8 @@ module.exports = class Menu {
     this.parent = node;
   }
 
-  getParent() {
-    return this.parent;
+  isRoot() {
+    return this.parent === null;
   }
 
   addChild(node) {
@@ -26,10 +26,6 @@ module.exports = class Menu {
     return this.children[index];
   }
 
-  // getChildren() {
-  //   return this.children;
-  // }
-
   removeChildren() {
     this.children = [
     ];
@@ -38,15 +34,4 @@ module.exports = class Menu {
   hasChildren() {
     return this.children.length > 0;
   }
-
-  // open() {
-  //   console.log('opening', this);
-  //   if (this.module === 'shell') {
-  //     console.log('shell module');
-  //     const shellModule = new ShellModule();
-  //     shellModule.exec(this);
-  //   } else {
-  //     console.log('this is a submenu');
-  //   }
-  // }
 };

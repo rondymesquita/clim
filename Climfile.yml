@@ -1,0 +1,11 @@
+---
+name: root
+items:
+- name: Say Hello
+  cmds:
+  - echo Hello!
+- name: Submenu
+  items:
+  - name: Apt update
+    cmds:
+    - echo Hello!

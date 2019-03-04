@@ -1,5 +1,4 @@
-const ShellModule = require('./modules/shell.module.js');
-// const Menu = require('./menu');
+const ShellModule = require('@/modules/shell.module.js');
 
 module.exports = class MenuCli {
   constructor(cli) {
@@ -11,26 +10,30 @@ module.exports = class MenuCli {
       selectedLeftPadding: '> ',
       submittedLeftPadding: '* ',
     };
+
+    this.EXIT_ITEM = '0. Back/Exit';
+
+    this._init();
+    this.shellModule = new ShellModule();
   }
 
-  // async init() {
-  //   const selectedMenu = await this.show();
-  //   console.log('test', selectedMenu.hasChildren());
-
-  //   if (selectedMenu.hasChildren()){
-  //     await this.show(selectedMenu);
-  //   }
-  //   this.open(selectedMenu);
-  // }
+  _init() {
+    this.cli.reset();
+  }
 
   async show(menu) {
-    this.cli.reset();
     const itemsToMount = menu.children.map((item, index) => `${index + 1}. ${item.name}`);
-    itemsToMount.push('0. Back/Exit');
+    itemsToMount.push(this.EXIT_ITEM);
+
     const item = await this.term.singleColumnMenu(itemsToMount, this.options).promise;
     const { selectedIndex, selectedText } = item;
-    if (selectedText === '0. Back/Exit') {
-      await this.show(menu.getParent());
+
+    if (selectedText === this.EXIT_ITEM) {
+      if (menu.parent) {
+        await this.show(menu.parent);
+      } else {
+        this.cli.terminate();
+      }
     } else {
       const selectedMenu = menu.getChild(selectedIndex);
 
@@ -38,16 +41,12 @@ module.exports = class MenuCli {
         await this.show(selectedMenu);
       } else {
         this.open(selectedMenu);
+        await this.show(selectedMenu.parent);
       }
     }
   }
 
   open(menu) {
-    if (menu.module.name === 'shell') {
-      const shellModule = new ShellModule();
-      shellModule.exec(menu.module);
-    } else {
-      console.log('this is a submenu', menu);
-    }
+    this.shellModule.exec(menu);
   }
-}
+};
