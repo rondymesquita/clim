@@ -1,9 +1,13 @@
 // const ShellModule = require('./modules/shell.module.js');
 
 module.exports = class Menu {
-  constructor({ name, cmds }) {
+  constructor({
+    name, cmds, level, breadcrumbs,
+  }) {
     this.name = name;
     this.cmds = cmds;
+    this.level = level;
+    this.breadcrumbs = breadcrumbs;
     this.children = [
     ];
     this.parent = null;
@@ -13,10 +17,6 @@ module.exports = class Menu {
     this.parent = node;
   }
 
-  isRoot() {
-    return this.parent === null;
-  }
-
   addChild(node) {
     node.setParentNode(this);
     this.children.push(node);
@@ -24,6 +24,10 @@ module.exports = class Menu {
 
   getChild(index) {
     return this.children[index];
+  }
+
+  getLabel() {
+    return `${this.level}. ${this.name}`;
   }
 
   removeChildren() {

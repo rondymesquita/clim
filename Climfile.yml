@@ -6,6 +6,6 @@ items:
   - echo Hello!
 - name: Submenu
   items:
-  - name: Apt update
+  - name: Say Good Bye
     cmds:
-    - echo Hello!
+    - echo 'Good Bye'!

@@ -21,32 +21,46 @@ module.exports = class MenuCli {
     this.cli.reset();
   }
 
-  async show(menu) {
-    const itemsToMount = menu.children.map((item, index) => `${index + 1}. ${item.name}`);
-    itemsToMount.push(this.EXIT_ITEM);
+  async _showBreadcrumbs(menu) {
+    this.cli.term(`${menu.breadcrumbs}`);
+  }
 
-    const item = await this.term.singleColumnMenu(itemsToMount, this.options).promise;
-    const { selectedIndex, selectedText } = item;
+  async show(menu) {
+    this.cli.reset();
+    this._showBreadcrumbs(menu);
+    const { selectedIndex, selectedText } = await this._getSelectedItem(menu);
 
     if (selectedText === this.EXIT_ITEM) {
-      if (menu.parent) {
-        await this.show(menu.parent);
-      } else {
-        this.cli.terminate();
-      }
+      await this._backOrExit(menu);
     } else {
-      const selectedMenu = menu.getChild(selectedIndex);
+      const childMenu = menu.getChild(selectedIndex);
 
-      if (selectedMenu.hasChildren()) {
-        await this.show(selectedMenu);
+      if (childMenu.hasChildren()) {
+        await this.show(childMenu);
       } else {
-        this.open(selectedMenu);
-        await this.show(selectedMenu.parent);
+        this._exec(childMenu);
+        await this.show(childMenu.parent);
       }
     }
   }
 
-  open(menu) {
+  async _getSelectedItem(menu) {
+    const itemsToMount = menu.children.map(childMenu => `${childMenu.getLabel()}`);
+    itemsToMount.push(this.EXIT_ITEM);
+
+    const selectedItem = await this.term.singleColumnMenu(itemsToMount, this.options).promise;
+    return selectedItem;
+  }
+
+  _exec(menu) {
     this.shellModule.exec(menu);
+  }
+
+  async _backOrExit(menu) {
+    if (menu.parent) {
+      await this.show(menu.parent);
+    } else {
+      this.cli.terminate();
+    }
   }
 };

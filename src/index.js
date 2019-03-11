@@ -19,8 +19,4 @@ async function main() {
   await menuCli.show(rootMenu);
 }
 
-main().catch((err) => {
-  console.err(err);
-}).finally(() => {
-  process.exit();
-});
+main();

@@ -32,5 +32,4 @@ module.exports = class Cli {
       if (name === 'CTRL_C') { this.terminate(); }
     });
   }
-
 };
